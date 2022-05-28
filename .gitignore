@@ -20,15 +20,13 @@
 *.rar
 
 # IntelliJ Idea folders
-out
-.idea
+out/
+.idea/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
 
-# IntelliJ Idea files
-*.iml
-.idea/
-out/
+# Output
 META-INF/
+*.iml
