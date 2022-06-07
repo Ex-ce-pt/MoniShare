@@ -1,6 +1,8 @@
 # MoniShare
  
-A **Java** application for sharing desktop.
+A **Java** application for desktop sharing.
+
+Inspired by *Anydesk*
 
 By **Exedice**
 

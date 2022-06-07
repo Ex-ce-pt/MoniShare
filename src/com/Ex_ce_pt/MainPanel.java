@@ -26,20 +26,23 @@ public class MainPanel extends javax.swing.JPanel {
         listener.attach(Main.frame);
 
         pageBar = new PageBar();
+        pageBar.subscribeToTabChangeEvent(this::setCurrentPage);
 
         add(pageBar, BorderLayout.NORTH);
 
-        //setCurrentPage(0);
-        setCurrentPage(1);
+        setCurrentPage(0);
+        //setCurrentPage(1);
     }
 
-    public void setCurrentPage(final int index) {
+    public void setCurrentPage(int index) {
         if (index < 0 || index >= pages.size()) return;
 
         if (currentPage != null) remove(currentPage);
         currentPage = pages.get(index);
         add(currentPage, BorderLayout.CENTER);
         listener.setFocusedPage(currentPage);
+
+        repaint();
     }
 
 

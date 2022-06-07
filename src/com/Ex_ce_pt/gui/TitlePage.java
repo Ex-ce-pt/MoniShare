@@ -21,7 +21,7 @@ public class TitlePage extends Page {
     }
 
     @Override
-    public void paintComponent(final Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         g.setColor(Color.BLUE);
@@ -31,17 +31,17 @@ public class TitlePage extends Page {
     }
 
     @Override
-    public void onKeyEvent(final KeyEvent e, final KeyEventType type) {
+    public void onKeyEvent(KeyEvent e, KeyEventType type) {
         System.out.println(e.getKeyChar());
     }
 
     @Override
-    public void onMouseEvent(final MouseEvent e, final MouseEventType type) {
+    public void onMouseEvent(MouseEvent e, MouseEventType type) {
 
     }
 
     @Override
-    public void onMouseMoveEvent(final MouseEvent e, final MouseMoveEventType type) {
+    public void onMouseMoveEvent(MouseEvent e, MouseMoveEventType type) {
 
     }
 
@@ -67,24 +67,7 @@ public class TitlePage extends Page {
             setBorder(BorderFactory.createEtchedBorder());
 
             ipField = new JTextField();
-            try {
-                byte[] nums = java.net.InetAddress.getLocalHost().getAddress();
-                StringBuilder sb = new StringBuilder(), original = new StringBuilder();
-                for (int i = 0; i < nums.length; i++) {
-                    original.append((int) nums[i]);
-                    sb.append(((int) nums[i]) + (int) Byte.MAX_VALUE);
-                    if (i != nums.length - 1) {
-                        sb.append('.');
-                        original.append('.');
-                    }
-                }
-                ipField.setText(sb.toString());
-                System.out.println(original);
-                System.out.println(java.util.Arrays.toString(java.net.InetAddress.getLocalHost().getAddress()));
-
-            } catch (java.net.UnknownHostException e) {
-                e.printStackTrace();
-            }
+            ipField.setText(tryGetIP());
             ipField.setEditable(false);
             ipField.setFont(new Font("Times New Rowman", Font.BOLD, 20));
             ipField.setHorizontalAlignment(JTextField.CENTER);
@@ -113,6 +96,33 @@ public class TitlePage extends Page {
             add(label);
             add(copyButton);
             add(stateLabel);
+        }
+
+        private String tryGetIP() {
+            try {
+                byte[] nums = java.net.InetAddress.getLocalHost().getAddress();
+                StringBuilder sb = new StringBuilder(), original = new StringBuilder();
+                for (int i = 0; i < nums.length; i++) {
+                    original.append((int) nums[i]);
+                    sb.append(((int) nums[i]) - (int) Byte.MIN_VALUE);
+                    if (i != nums.length - 1) {
+                        sb.append('.');
+                        original.append('.');
+                    }
+                }
+
+                // [-64, -88, 1, 98]
+                // [63, 39, 128, 225]
+                System.out.println(original);
+                System.out.println(java.util.Arrays.toString(java.net.InetAddress.getLocalHost().getAddress()));
+                System.out.println(sb);
+
+                return sb.toString();
+
+            } catch (java.net.UnknownHostException e) {
+                e.printStackTrace();
+            }
+            return "";
         }
 
         private void animate() {

@@ -8,8 +8,8 @@ public abstract class Page extends javax.swing.JPanel {
     public enum MouseEventType { CLICKED, PRESSED, RELEASED }
     public enum MouseMoveEventType { MOVED, DRAGGED, ENTERED, EXITED }
 
-    public abstract void onKeyEvent(final KeyEvent e, final KeyEventType type);
-    public abstract void onMouseEvent(final MouseEvent e, final MouseEventType type);
-    public abstract void onMouseMoveEvent(final MouseEvent e, final MouseMoveEventType type);
+    public abstract void onKeyEvent(KeyEvent e, KeyEventType type);
+    public abstract void onMouseEvent(MouseEvent e, MouseEventType type);
+    public abstract void onMouseMoveEvent(MouseEvent e, MouseMoveEventType type);
 
 }

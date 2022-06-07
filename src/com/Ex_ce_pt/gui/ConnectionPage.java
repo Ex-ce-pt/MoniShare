@@ -17,7 +17,7 @@ public class ConnectionPage extends Page {
         resetImage(PRIMARY_DIMENSION);
     }
 
-    private void resetImage(final Dimension dimension) {
+    private void resetImage(Dimension dimension) {
         currentFrame = new BufferedImage(dimension.width / 4, dimension.height / 4, BufferedImage.TYPE_INT_ARGB);
         final Graphics g = currentFrame.getGraphics();
         g.setColor(PageBar.Tab.TAB_COLOR);
@@ -25,24 +25,24 @@ public class ConnectionPage extends Page {
     }
 
     @Override
-    public void paintComponent(final Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         g.drawImage(currentFrame, 100, 100, currentFrame.getWidth(), currentFrame.getHeight(), null);
     }
 
     @Override
-    public void onKeyEvent(final KeyEvent e, final KeyEventType type) {
+    public void onKeyEvent(KeyEvent e, KeyEventType type) {
 
     }
 
     @Override
-    public void onMouseEvent(final MouseEvent e, final MouseEventType type) {
+    public void onMouseEvent(MouseEvent e, MouseEventType type) {
 
     }
 
     @Override
-    public void onMouseMoveEvent(final MouseEvent e, final MouseMoveEventType type) {
+    public void onMouseMoveEvent(MouseEvent e, MouseMoveEventType type) {
 
     }
 

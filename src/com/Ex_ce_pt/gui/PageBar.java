@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class PageBar extends JPanel {
 
     private final ArrayList<Tab> tabs;
+
+    private final ArrayList<Consumer<Integer>> onTabChange;
 
     public PageBar() {
         setBackground(Color.lightGray);
@@ -16,6 +20,8 @@ public class PageBar extends JPanel {
         setPreferredSize(new Dimension(1, 30));
 
         tabs = new ArrayList<>();
+
+        onTabChange = new ArrayList<>();
 
         addTab(new HomeTab(this));
 
@@ -25,26 +31,32 @@ public class PageBar extends JPanel {
 
     }
 
-    public void addTab(final String title) {
+    private void fireTabChangeEvent(int index) {
+        for (var i : onTabChange)
+            if (i != null)
+                i.accept(index);
+    }
+
+    public void addTab(String title) {
         addTab(new Tab(title, this));
     }
 
-    public void addTab(final Tab tab) {
+    public void addTab(Tab tab) {
         tabs.add(tab);
         updateTabs();
     }
 
-    public void removeTab(final int index) {
+    public void removeTab(int index) {
         tabs.remove(index);
         updateTabs();
     }
 
-    public void removeTab(final String title) {
+    public void removeTab(String title) {
         tabs.removeIf(t -> t.title.equals(title));
         updateTabs();
     }
 
-    public void removeTab(final Tab tab) {
+    public void removeTab(Tab tab) {
         tabs.remove(tab);
         updateTabs();
     }
@@ -59,8 +71,16 @@ public class PageBar extends JPanel {
         repaint();
     }
 
+    public void subscribeToTabChangeEvent(Consumer<Integer> func) {
+        onTabChange.add(func);
+    }
 
-    public static class Tab extends JPanel {
+    public void unsubscribeFromTabChangeEvent(Consumer<Integer> func) {
+        onTabChange.remove(func);
+    }
+
+
+    public static class Tab extends JPanel implements MouseListener {
 
         public static final Color TAB_COLOR = new Color(160, 160, 160);
 
@@ -69,7 +89,7 @@ public class PageBar extends JPanel {
         protected final JLabel label;
         protected final JButton closeButton;
 
-        public Tab(final String title, final PageBar parent) {
+        public Tab(String title, PageBar parent) {
             this.title = title;
             this.parent = parent;
 
@@ -87,19 +107,44 @@ public class PageBar extends JPanel {
 
             closeButton.setBounds(10, 5, 20, 20);
 
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(final MouseEvent e) {
-                    selected();
-                }
-            });
+            addMouseListener(this);
 
             add(label);
             add(closeButton);
         }
 
         public void selected() {
-            System.out.println(parent.tabs.indexOf(this));
+            parent.fireTabChangeEvent(parent.tabs.indexOf(this));
+        }
+
+        @Override
+        public void mouseClicked(final MouseEvent e) {
+            selected();
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
         }
 
         public static class CloseButton extends JButton {
@@ -108,7 +153,7 @@ public class PageBar extends JPanel {
 
             private final Tab parent;
 
-            public CloseButton(final Tab parent) {
+            public CloseButton(Tab parent) {
                 this.parent = parent;
 
                 addActionListener(e -> parent.parent.removeTab(parent));
@@ -118,7 +163,7 @@ public class PageBar extends JPanel {
             }
 
             @Override
-            public void paintComponent(final Graphics g) {
+            public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(Color.black);
                 final Dimension size = getSize();
